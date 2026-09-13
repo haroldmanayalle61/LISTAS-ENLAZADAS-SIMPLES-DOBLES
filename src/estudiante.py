@@ -8,20 +8,20 @@ class Estudiante:
         self.apellidos = apellidos
         self.nombres = nombres
         self.carrera = carrera
-        self.ciclo = self.validar_ciclo(ciclo)
-        self.promedio = self.validar_promedio(promedio)
+        self.ciclo = self._validar_ciclo(ciclo)
+        self.promedio = self._validar_promedio(promedio)
 
     # ------------------------------------------------------------------
     # Validaciones 
     # ------------------------------------------------------------------
     @staticmethod
-    def validar_ciclo(ciclo: int) -> int:
+    def _validar_ciclo(ciclo: int) -> int:
         if not isinstance(ciclo, int) or ciclo <= 0:
             raise ValueError("El ciclo debe ser un número entero positivo.")
         return ciclo
 
     @staticmethod
-    def validar_promedio(promedio: float) -> float:
+    def _validar_promedio(promedio: float) -> float:
         if not isinstance(promedio, (int, float)) or not (0 <= promedio <= 20):
             raise ValueError("El promedio debe ser un número entre 0 y 20.")
         return float(promedio)
@@ -83,3 +83,4 @@ class Estudiante:
     @promedio.setter
     def promedio(self, nuevo_promedio: float):
         self._promedio = self._validar_promedio(nuevo_promedio)
+
