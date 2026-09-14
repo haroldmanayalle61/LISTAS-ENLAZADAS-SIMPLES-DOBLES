@@ -6,10 +6,9 @@ if TYPE_CHECKING:
     from lista_doble import Lista_doble
 
 def ordenar(lista: 'Lista_doble', criterio: str, descendente: bool = False) -> None:
-    """
-    Ordena la lista doblemente enlazada intercambiando los datos de los nodos.
-    Complejidad temporal: O(n^2) - Algoritmo de Selección.
-    """
+
+    #Ordena la lista doblemente enlazada intercambiando los datos de los nodos.
+
     if lista.esta_vacia() or lista.cabeza is lista.cola:
         return # La lista está vacía o tiene un solo elemento
 
@@ -36,23 +35,21 @@ def ordenar(lista: 'Lista_doble', criterio: str, descendente: bool = False) -> N
                     cambiar = True
                 elif descendente and siguiente_nodo.dato.promedio > nodo_min_max.dato.promedio:
                     cambiar = True
-            
+
             if cambiar:
-                nodo_min_max = siguiente_nodo
-                
+                nodo_min_max = siguiente_nodo   
             siguiente_nodo = siguiente_nodo.siguiente
             
         # Intercambiar los datos (Estudiante completo) entre los nodos
         if nodo_min_max != actual:
             temp_dato = actual.dato
             actual.dato = nodo_min_max.dato
-            nodo_min_max.dato = temp_dato
-            
+            nodo_min_max.dato = temp_dato 
         actual = actual.siguiente
 
 
 def _verificar_orden_ascendente(lista: 'Lista_doble') -> bool:
-    """Verifica si la lista está ordenada por código ascendente."""
+    #Verifica si la lista esta ordenada por codigo ascendente.
     if lista.esta_vacia() or lista.cabeza is lista.cola:
         return True
     
@@ -65,10 +62,9 @@ def _verificar_orden_ascendente(lista: 'Lista_doble') -> bool:
 
 
 def insertar_ordenado(lista: 'Lista_doble', estudiante: Estudiante) -> None:
-    """
-    Inserta un estudiante manteniendo el orden ascendente por código modificando referencias.
-    Complejidad temporal: O(n)
-    """
+    
+    #Inserta un estudiante manteniendo el orden ascendente por código modificando referencias.
+   
     # Validación exigida por los acuerdos del equipo
     if not _verificar_orden_ascendente(lista):
         raise ValueError("La lista no está ordenada por código ascendente. Ordene la lista primero.")
@@ -101,7 +97,6 @@ def insertar_ordenado(lista: 'Lista_doble', estudiante: Estudiante) -> None:
         actual.siguiente = nuevo_nodo
         lista.cola = nuevo_nodo
     else:
-      
         siguiente_nodo = actual.siguiente
         nuevo_nodo.anterior = actual
         nuevo_nodo.siguiente = siguiente_nodo

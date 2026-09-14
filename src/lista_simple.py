@@ -10,59 +10,46 @@ class ListaSimple:
     def esta_vacia(self)-> bool:
         return self.inicio is None
 
-    def inserter_inicio(self, estudiante: Estudiante)-> None:
+    def insertar_inicio(self, estudiante: Estudiante)-> None:
         nuevo_nodo = Nodo(estudiante)
-
         if self.esta_vacia():
             self.inicio = nuevo_nodo
             self.fin = nuevo_nodo
-
         else:
             nuevo_nodo.siguiente = self.inicio
             self.inicio = nuevo_nodo
 
     def insertar_final(self, estudiante: Estudiante)-> None:
         nuevo_nodo = Nodo(estudiante)
-
         if self.esta_vacia():
             self.inicio = nuevo_nodo
-
-            
         else:
             self.fin.siguiente = nuevo_nodo
-
         self.fin = nuevo_nodo
 
     def insertar_posicion(self, estudiante: Estudiante, posicion: int) -> None:
-
         if posicion <0:
-            raise IndexError("La posicion no puede ser negatica.")
-
+            raise IndexError("La posición no puede ser negativa.")
         nuevo_nodo = Nodo(estudiante)
 
-        #Insertar al inicio
+        # Caso 1: Insertar al inicio
         if posicion == 0:
             nuevo_nodo.siguiente = self.inicio
             self.inicio = nuevo_nodo
-
             if self.fin is None:
                 self.fin = nuevo_nodo
-
             return
-
+        
+        # Caso 2: Recorrer hasta el nodo anterior a la posición deseada
         nodo_actual = self.inicio
         contador = 0
-
         while nodo_actual is not None and contador < posicion -1:
             nodo_actual = nodo_actual.siguiente
             contador += 1
-
         if nodo_actual is None:
             raise IndexError("La posicion esta fuera del rango de la lista.")
-
         nuevo_nodo.siguiente = nodo_actual.siguiente
         nodo_actual.siguiente = nuevo_nodo
-
         if nuevo_nodo.siguiente is None:
             self.fin = nuevo_nodo
   

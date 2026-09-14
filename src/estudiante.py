@@ -21,7 +21,7 @@ class Estudiante:
         return ciclo
 
     @staticmethod
-    def _validar_promedio(promedio: float) -> float:
+    def _validar_promedio(promedio: float|int) -> float:
         if not isinstance(promedio, (int, float)) or not (0 <= promedio <= 20):
             raise ValueError("El promedio debe ser un número entre 0 y 20.")
         return float(promedio)
@@ -36,7 +36,7 @@ class Estudiante:
     # ------------------------------------------------------------------
     @property
     def codigo(self) -> str:
-        return self._codigo
+        return self.__codigo
 
     @codigo.setter
     def codigo(self, nuevo_codigo: str):
@@ -46,41 +46,41 @@ class Estudiante:
 
     @property
     def apellidos(self) -> str:
-        return self._apellidos
+        return self.__apellidos
 
     @apellidos.setter
     def apellidos(self, nuevos_apellidos: str):
-        self._apellidos = nuevos_apellidos
+        self.__apellidos = nuevos_apellidos
 
     @property
     def nombres(self) -> str:
-        return self._nombres
+        return self.__nombres
 
     @nombres.setter
     def nombres(self, nuevos_nombres: str):
-        self._nombres = nuevos_nombres
+        self.__nombres = nuevos_nombres
 
     @property
     def carrera(self) -> str:
-        return self._carrera
+        return self.__carrera
 
     @carrera.setter
     def carrera(self, nueva_carrera: str):
-        self._carrera = nueva_carrera
+        self.__carrera = nueva_carrera
 
     @property
     def ciclo(self) -> int:
-        return self._ciclo
+        return self.__ciclo
 
     @ciclo.setter
     def ciclo(self, nuevo_ciclo: int):
-        self._ciclo = self._validar_ciclo(nuevo_ciclo)
+        self.__ciclo = self._validar_ciclo(nuevo_ciclo)
 
     @property
     def promedio(self) -> float:
-        return self._promedio
+        return self.__promedio
 
     @promedio.setter
     def promedio(self, nuevo_promedio: float):
-        self._promedio = self._validar_promedio(nuevo_promedio)
+        self.__promedio = self._validar_promedio(nuevo_promedio)
 
