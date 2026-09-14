@@ -15,7 +15,7 @@ class Lista_doble:
         return f"Lista_doble con {self.tamanio} elemento(s)"
 
     # ------------------------------------------------------------------
-    # Verificación / consulta
+    # Verificacion / consulta
     # ------------------------------------------------------------------
     def esta_vacia(self) -> bool:
         return self.cabeza is None
@@ -57,7 +57,7 @@ class Lista_doble:
         self.tamanio += 1
 
     def insertar_posicion(self, dato: Estudiante, posicion: int) -> None:
-        # posición 0 = primer elemento
+        # posicion 0 = primer elemento
         if posicion <= 0:
             self.insertar_inicio(dato)
             return
@@ -112,7 +112,7 @@ class Lista_doble:
         return True
 
     # ------------------------------------------------------------------
-    # Modificación
+    # Modificacion
     # ------------------------------------------------------------------
     def modificar_estudiante(self, codigo: str, nuevo_dato: Estudiante) -> bool:
         nodo = self._buscar_nodo(codigo)
@@ -172,7 +172,7 @@ class Lista_doble:
     # ------------------------------------------------------------------
     def mostrar_inicio_a_fin(self) -> None:
         if self.esta_vacia():
-            print("La lista está vacía.")
+            print("La lista esta vacía.")
             return
         actual = self.cabeza
         while actual is not None:
@@ -181,7 +181,7 @@ class Lista_doble:
 
     def mostrar_fin_a_inicio(self) -> None:
         if self.esta_vacia():
-            print("La lista está vacía.")
+            print("La lista esta vacía.")
             return
         actual = self.cola
         while actual is not None:
@@ -189,7 +189,7 @@ class Lista_doble:
             actual = actual.anterior
 
     # ------------------------------------------------------------------
-    # Métodos internos de apoyo
+    # Metodos internos de apoyo
     # ------------------------------------------------------------------
     def _buscar_nodo(self, codigo: str) -> Nodo_doble | None:
         actual = self.cabeza
