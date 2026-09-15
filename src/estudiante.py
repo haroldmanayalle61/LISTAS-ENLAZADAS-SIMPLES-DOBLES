@@ -42,7 +42,7 @@ class Estudiante:
     def codigo(self, nuevo_codigo: str):
         if not isinstance(nuevo_codigo, str) or not nuevo_codigo.strip():
             raise ValueError("El código debe ser una cadena de texto no vacía.")
-        self._codigo = nuevo_codigo
+        self.__codigo = nuevo_codigo
 
     @property
     def apellidos(self) -> str:
