@@ -226,3 +226,11 @@ class Lista_doble:
         nodo.anterior = None
         nodo.siguiente = None
         self.tamanio -= 1
+
+    def codigo_existe(self,codigo:str)-> bool:
+        nodo_actual = self.inicio
+        while nodo_actual is not None:
+            if nodo_actual.dato.codigo == codigo :
+                return True
+            nodo_actual = nodo_actual.siguiente
+        return False
