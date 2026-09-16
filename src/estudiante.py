@@ -8,8 +8,8 @@ class Estudiante:
         self.apellidos = apellidos
         self.nombres = nombres
         self.carrera = carrera
-        self.ciclo = self._validar_ciclo(ciclo)
-        self.promedio = self._validar_promedio(promedio)
+        self.ciclo = ciclo
+        self.promedio = promedio
 
     # ------------------------------------------------------------------
     # Validaciones 
@@ -26,10 +26,25 @@ class Estudiante:
             raise ValueError("El promedio debe ser un número entre 0 y 20.")
         return float(promedio)
 
+    @staticmethod
+    def _validar_cadena(cadena:str)->str:
+        if not isinstance(cadena, str):
+            raise ValueError("Nombres, apellidos y carrera deben ser una cadena de texto.")
+
+        cadena = cadena.strip()
+
+        if not cadena:
+            raise ValueError("Nombres, apellidos y carrera no pueden estar vacío.")
+
+        for caracter in cadena:
+            if not (caracter.isalpha() or caracter == " "):
+                raise ValueError("Nombres, apellidos y carrera solo pueden contener letras y espacios.")
+        return cadena
+
     def __str__(self)->str:
-        return (f"[{self._codigo}] {self._apellidos}, {self._nombres} | "
-                f"Carrera: {self._carrera} | Ciclo: {self._ciclo} | "
-                f"Promedio: {self._promedio:.2f}")
+        return (f"[{self.__codigo}] {self.__apellidos}, {self.__nombres} | "
+                f"Carrera: {self.__carrera} | Ciclo: {self.__ciclo} | "
+                f"Promedio: {self.__promedio:.2f}")
 
     # ------------------------------------------------------------------
     # GETTERS Y SETTERS
@@ -40,8 +55,17 @@ class Estudiante:
 
     @codigo.setter
     def codigo(self, nuevo_codigo: str):
-        if not isinstance(nuevo_codigo, str) or not nuevo_codigo.strip():
-            raise ValueError("El código debe ser una cadena de texto no vacía.")
+        if not isinstance(nuevo_codigo, str):
+            raise ValueError("El código debe ser una cadena de texto.")
+
+        nuevo_codigo = nuevo_codigo.strip()
+
+        if not nuevo_codigo:
+            raise ValueError("El código no puede estar vacío.")
+
+        if not nuevo_codigo.isalnum():
+            raise ValueError("El código solo puede contener letras y dígitos.")
+
         self.__codigo = nuevo_codigo
 
     @property
@@ -50,7 +74,7 @@ class Estudiante:
 
     @apellidos.setter
     def apellidos(self, nuevos_apellidos: str):
-        self.__apellidos = nuevos_apellidos
+        self.__apellidos = self._validar_cadena(nuevos_apellidos)
 
     @property
     def nombres(self) -> str:
@@ -58,7 +82,7 @@ class Estudiante:
 
     @nombres.setter
     def nombres(self, nuevos_nombres: str):
-        self.__nombres = nuevos_nombres
+        self.__nombres = self._validar_cadena(nuevos_nombres)
 
     @property
     def carrera(self) -> str:
@@ -66,7 +90,7 @@ class Estudiante:
 
     @carrera.setter
     def carrera(self, nueva_carrera: str):
-        self.__carrera = nueva_carrera
+        self.__carrera = self._validar_cadena(nueva_carrera)
 
     @property
     def ciclo(self) -> int:
