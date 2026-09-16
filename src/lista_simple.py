@@ -258,3 +258,19 @@ class ListaSimple:
                 return True
             nodo_actual = nodo_actual.siguiente
         return False
+
+    def obtener_por_posicion(self, posicion: int) -> Estudiante:
+        if posicion < 0:
+            raise IndexError("La posición no puede ser negativa.")
+
+        actual = self.inicio
+        contador = 0
+
+        while actual is not None:
+            if contador == posicion:
+                return actual.dato
+
+            actual = actual.siguiente
+            contador += 1
+
+        raise IndexError("La posición está fuera del rango de la lista.")

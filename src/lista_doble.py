@@ -228,7 +228,7 @@ class Lista_doble:
         self.tamanio -= 1
 
     def codigo_existe(self,codigo:str)-> bool:
-        nodo_actual = self.inicio
+        nodo_actual = self.cabeza
         while nodo_actual is not None:
             if nodo_actual.dato.codigo == codigo :
                 return True
