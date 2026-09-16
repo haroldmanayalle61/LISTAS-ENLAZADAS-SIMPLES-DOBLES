@@ -39,19 +39,23 @@ def limpiar_pantalla() -> None:
 
 
 def registar_estudiante(lista, codigo_actual=None) -> Estudiante:
-    # codigo_actual permite conservar el código al modificar.
-    while True:
-        codigo = input("Ingrese código: ").strip()
+    if codigo_actual is None:
+        # Registro de un estudiante nuevo.
+        while True:
+            codigo = input("Ingrese código: ").strip()
 
-        if not codigo:
-            print("El código no puede estar vacío.")
-            continue
+            if not codigo:
+                print("El código no puede estar vacío.")
+                continue
 
-        if codigo != codigo_actual and lista.codigo_existe(codigo):
-            print("Código previamente registrado.")
-            continue
-
-        break
+            if lista.codigo_existe(codigo):
+                print("Código previamente registrado.")
+                continue
+            break
+    else:
+        # Modificación: se conserva el identificador.
+        codigo = codigo_actual
+        print(f"Código del estudiante: {codigo} (no modificable)")
 
     apellidos = input("Ingrese sus apellidos: ").strip()
     nombres = input("Ingrese sus nombres: ").strip()
@@ -59,8 +63,21 @@ def registar_estudiante(lista, codigo_actual=None) -> Estudiante:
     ciclo = leer_entero("Ingrese su ciclo: ")
     promedio = leer_flotante("Ingrese su promedio: ")
 
-    # Estudiante valida el ciclo y el promedio.
     return Estudiante(codigo,apellidos,nombres,carrera,ciclo,promedio)
+
+def elegir_descendente() -> bool:
+    print("1. Ascendente (menor a mayor)")
+    print("2. Descendente (mayor a menor)")
+
+    opcion = leer_entero("Seleccione el orden: ")
+
+    if opcion == 1:
+        return False
+
+    if opcion == 2:
+        return True
+
+    raise ValueError("Debe seleccionar 1 o 2.")
 
 def menu_principal() -> None:
     limpiar_pantalla()
@@ -122,6 +139,7 @@ def menu_lista_simple() -> None:
             print("15. Ordenar estudiantes por apellidos")
             print("16. Ordenar estudiantes por promedio")
             print("17. Vaciar lista")
+            print("18. Insertar despues de un estudiante por codigo")
             print("0. Volver al menú principal")
 
             numero = leer_entero("Ingrese una opción: ")
@@ -155,12 +173,12 @@ def menu_lista_simple() -> None:
                     print("Realizado con éxito.")
 
                 case 5:
-                    codigo = input(
-                        "Ingrese el código del estudiante: "
-                    ).strip()
-
+                    codigo = input("Ingrese el código del estudiante: ").strip()
                     estudiante = lista_simple.buscar_codigo(codigo)
+                    posicion = lista_simple.obtener_posicion(codigo)
+                    print("ESTUDIANTE ENCONTRADO :")
                     print(estudiante)
+                    print("Posicion :",posicion)
 
                 case 6:
                     codigo = input("Ingrese el código del estudiante a modificar: ").strip()
@@ -191,38 +209,76 @@ def menu_lista_simple() -> None:
                     print("Eliminado con éxito.")
 
                 case 11:
-                    print(f"\n{'=' * 10} ESTUDIANTES REGISTRADOS {'=' * 10}")
-                    print(lista_simple)
+                    if lista_simple.contar() > 0 :
+                        print(f"\n{'=' * 10} ESTUDIANTES REGISTRADOS {'=' * 10}")
+                        print(lista_simple)
+                    else :
+                        print("La lista está vacía")
 
                 case 12:
-                    print(
-                        "Total de estudiantes registrados:",
-                        lista_simple.contar()
-                    )
+                    print("Total de estudiantes registrados:",lista_simple.contar())
 
                 case 13:
-                    posicion = leer_posicion()
-                    estudiante = lista_simple.obtener_por_posicion(posicion)
-                    if estudiante is None:
-                        raise IndexError("La posición está fuera del rango de la lista.")
-                    print(estudiante)
+                    if lista_simple.contar()>0:
+                        posicion = leer_posicion()
+                        estudiante = lista_simple.obtener_por_posicion(posicion)
+                        if estudiante is None:
+                            raise IndexError("La posición está fuera del rango de la lista.")
+                        print(estudiante)
+                    else :
+                        print("La lista está vacía")
 
                 case 14:
-                    orden_simple.ordenar(lista_simple, "codigo")
-                    print("Ordenado por código con éxito.")
-
+                    if lista_simple.contar()>0 :
+                        descendente = elegir_descendente()
+                        print("\nLISTA ANTES DEL ORDENAMIENTO:")
+                        print(lista_simple)
+                        orden_simple.ordenar(lista_simple,"codigo",descendente)
+                        print("\nLISTA DESPUES DEL ORDENAMIENTO:")
+                        print(lista_simple)
+                    else:
+                        print("La lista está vacía")
                 case 15:
-                    orden_simple.ordenar(lista_simple, "apellidos")
-                    print("Ordenado por apellidos con éxito.")
+                    if lista_simple.contar()> 0 :
+                        print("\nLISTA ANTES DEL ORDENAMIENTO:")
+                        print(lista_simple)
+                        orden_simple.ordenar(lista_simple,"apellidos")
+                        print("\nLISTA DESPUES DEL ORDENAMIENTO:")
+                        print(lista_simple)
+                    else:
+                        print("La lista está vacía")
 
                 case 16:
-                    orden_simple.ordenar(lista_simple, "promedio")
-                    print("Ordenado por promedio con éxito.")
+                    if lista_simple.contar() > 0:
+                        descendente = elegir_descendente()
+                        print("\nLISTA ANTES DEL ORDENAMIENTO:")
+                        print(lista_simple)
+                        orden_simple.ordenar(lista_simple,"promedio",descendente)
+                        print("\nLISTA DESPUÉS DEL ORDENAMIENTO:")
+                        print(lista_simple)
+                    else:
+                        print("La lista está vacía")
 
                 case 17:
-                    lista_simple.vaciar()
-                    print("Lista vaciada con éxito.")
+                    if lista_simple.contar() > 0 :
+                        lista_simple.vaciar()
+                        print("Lista vaciada con éxito.")
+                    else :
+                        print("No se ha registrado ningun estudiante")
 
+                case 18:
+                    codigo = input("Código del estudiante de referencia: ").strip()
+                    referencia = lista_simple.buscar_codigo(codigo)
+                    print("\nESTUDIANTE DE REFERENCIA:")
+                    print(referencia)
+                    print("\nIngrese los datos del nuevo estudiante:")
+                    estudiante = registar_estudiante(lista_simple)
+                    print("\nLISTA ANTES DE INSERTAR:")
+                    print(lista_simple)
+                    lista_simple.insertar_despues(codigo,estudiante)
+
+                    print("\nLISTA DESPUÉS DE INSERTAR:")
+                    print(lista_simple)
                 case 0:
                     break
 
@@ -289,26 +345,32 @@ def menu_lista_doble() -> None:
                     print("Realizado con éxito.")
 
                 case 5:
-                    codigo = input("Ingrese el código del estudiante: ").strip()
-                    estudiante = lista_doble.buscar_por_codigo(codigo)
-                    if estudiante is None:
-                        raise ValueError(f"No se encontró un estudiante con el código {codigo}.")
-                    print(estudiante)
+                    if lista_doble.contar_elementos() > 0 :
+                        codigo = input("Ingrese el código del estudiante: ").strip()
+                        estudiante = lista_doble.buscar_por_codigo(codigo)
+                        if estudiante is None:
+                            raise ValueError(f"No se encontró un estudiante con el código {codigo}.")
+                        print(estudiante)
+                    else :
+                        print("La lista está vacía")
 
                 case 6:
-                    codigo = input("Ingrese el código del estudiante a modificar: ").strip()
-                    estudiante = lista_doble.buscar_por_codigo(codigo)
-                    if estudiante is None:
-                        raise ValueError(f"No se encontró un estudiante con el código {codigo}.")
-                    print("Estudiante actual:")
-                    print(estudiante)
-                    nuevo_estudiante = registar_estudiante(lista_doble,codigo)
+                    if lista_doble.contar_elementos() > 0:
+                        codigo = input("Ingrese el código del estudiante a modificar: ").strip()
+                        estudiante = lista_doble.buscar_por_codigo(codigo)
+                        if estudiante is None:
+                            raise ValueError(f"No se encontró un estudiante con el código {codigo}.")
+                        print("Estudiante actual:")
+                        print(estudiante)
+                        nuevo_estudiante = registar_estudiante(lista_doble,codigo)
 
-                    if not lista_doble.modificar_estudiante(
-                        codigo, nuevo_estudiante
-                    ):
-                        raise ValueError("No se pudo modificar el estudiante.")
-                    print("Realizado con éxito.")
+                        if not lista_doble.modificar_estudiante(
+                            codigo, nuevo_estudiante
+                        ):
+                            raise ValueError("No se pudo modificar el estudiante.")
+                        print("Realizado con éxito.")
+                    else :
+                        print("La lista está vacía")
 
                 case 7:
                     if not lista_doble.eliminar_primero():
@@ -321,79 +383,111 @@ def menu_lista_doble() -> None:
                     print("Eliminado con éxito.")
 
                 case 9:
-                    codigo = input("Ingrese el código: ").strip()
-                    if not lista_doble.eliminar_por_codigo(codigo):
-                        raise ValueError(f"No se encontró un estudiante con el código {codigo}.")
-                    print("Eliminado con éxito.")
+                    if lista_doble.contar_elementos() > 0:
+                        codigo = input("Ingrese el código: ").strip()
+                        if not lista_doble.eliminar_por_codigo(codigo):
+                            raise ValueError(f"No se encontró un estudiante con el código {codigo}.")
+                        print("Eliminado con éxito.")
+                    else :
+                        print("La lista está vacía")
 
                 case 10:
-                    posicion = leer_posicion()
-
-                    if not lista_doble.eliminar_por_posicion(
-                        posicion
-                    ):
-                        raise IndexError("La posición está fuera del rango de la lista.")
-                    print("Eliminado con éxito.")
+                    if lista_doble.contar_elementos()>0:
+                        posicion = leer_posicion()
+                        if not lista_doble.eliminar_por_posicion(posicion):
+                            raise IndexError("La posición está fuera del rango de la lista.")
+                        print("Eliminado con éxito.")
+                    else:
+                        print("La lista está vacía")
 
                 case 11:
-                    print(
-                        f"\n{'=' * 10} ESTUDIANTES REGISTRADOS {'=' * 10}")
+                    print(f"\n{'=' * 10} ESTUDIANTES REGISTRADOS {'=' * 10}")
                     lista_doble.mostrar_inicio_a_fin()
 
                 case 12:
                     print("Total de estudiantes registrados:",lista_doble.contar_elementos())
 
                 case 13:
-                    posicion = leer_posicion()
-                    estudiante = lista_doble.obtener_por_posicion(posicion)
-                    if estudiante is None:
-                        raise IndexError("La posición está fuera del rango de la lista.")
-                    print(estudiante)
+                    if lista_doble.contar_elementos()>0:
+                        posicion = leer_posicion()
+                        estudiante = lista_doble.obtener_por_posicion(posicion)
+                        if estudiante is None:
+                            raise IndexError("La posición está fuera del rango de la lista.")
+                        print(estudiante)
+                    else:
+                        print("La lista está vacía")
 
                 case 14:
-                    orden_doble.ordenar(lista_doble, "codigo")
-                    print("Ordenado por código con éxito.")
+                    if lista_doble.contar_elementos()>0:
+                        descendente = elegir_descendente()
+                        print("\nLISTA ANTES DEL ORDENAMIENTO:")
+                        lista_doble.mostrar_inicio_a_fin()
+                        orden_doble.ordenar(lista_doble,"codigo",descendente)
+                        print("\nLISTA DESPUES DEL ORDENAMIENTO:")
+                        lista_doble.mostrar_inicio_a_fin()
+                    else:
+                        print("La lista está vacía")
 
                 case 15:
-                    orden_doble.ordenar(lista_doble, "apellidos")
-                    print("Ordenado por apellidos con éxito.")
+                    if lista_doble.contar_elementos()>0:
+                        print("\nLISTA ANTES DEL ORDENAMIENTO:")
+                        lista_doble.mostrar_inicio_a_fin()
+                        orden_doble.ordenar(lista_doble,"apellidos")
+                        print("\nLISTA DESPUES DEL ORDENAMIENTO:")
+                        lista_doble.mostrar_inicio_a_fin()
+                    else:
+                        print("La lista está vacía")
 
                 case 16:
-                    orden_doble.ordenar(lista_doble, "promedio")
-                    print("Ordenado por promedio con éxito.")
+                    if lista_doble.contar_elementos()>0:
+                        descendente = elegir_descendente()
+                        print("\nLISTA ANTES DEL ORDENAMIENTO:")
+                        lista_doble.mostrar_inicio_a_fin()
+                        orden_doble.ordenar(lista_doble,"promedio",descendente)
+                        print("\nLISTA DESPUÉS DEL ORDENAMIENTO:")
+                        lista_doble.mostrar_inicio_a_fin()
+                    else :
+                        print("La lista está vacía")
 
                 case 17:
-                    lista_doble.vaciar_lista()
-                    print("Lista vaciada con éxito.")
+                    if lista_doble.contar_elementos()>0:
+                        lista_doble.vaciar_lista()
+                        print("Lista vaciada con éxito.")
+                    else:
+                        print("La lista ya estaba vacía")
 
                 case 18:
-                    codigo = input("Código del estudiante de referencia: ").strip()
-                    referencia = lista_doble.buscar_por_codigo(codigo)
+                    if lista_doble.contar_elementos()>0:
+                        codigo = input("Código del estudiante de referencia: ").strip()
+                        referencia = lista_doble.buscar_por_codigo(codigo)
 
-                    if referencia is None:
-                        raise ValueError(f"No se encontró un estudiante con el código {codigo}.")
+                        if referencia is None:
+                            raise ValueError(f"No se encontró un estudiante con el código {codigo}.")
 
-                    print("Ingrese los datos del nuevo estudiante:")
-                    estudiante = registar_estudiante(lista_doble)
+                        print("Ingrese los datos del nuevo estudiante:")
+                        estudiante = registar_estudiante(lista_doble)
 
-                    if not lista_doble.insertar_despues(codigo, estudiante):
-                        raise ValueError("No se pudo insertar el estudiante.")
-                    print("Realizado con éxito.")
+                        if not lista_doble.insertar_despues(codigo, estudiante):
+                            raise ValueError("No se pudo insertar el estudiante.")
+                        print("Realizado con éxito.")
+                    else :
+                        print("La lista esta vacia")
 
                 case 19:
-                    codigo = input("Código del estudiante de referencia: ").strip()
-                    referencia = lista_doble.buscar_por_codigo(
-                        codigo
-                    )
+                    if lista_doble.contar_elementos()>0:
+                        codigo = input("Código del estudiante de referencia: ").strip()
+                        referencia = lista_doble.buscar_por_codigo(codigo)
 
-                    if referencia is None:
-                        raise ValueError(f"No se encontró un estudiante con el código {codigo}.")
-                    print("Ingrese los datos del nuevo estudiante:")
-                    estudiante = registar_estudiante(lista_doble)
+                        if referencia is None:
+                            raise ValueError(f"No se encontró un estudiante con el código {codigo}.")
+                        print("Ingrese los datos del nuevo estudiante:")
+                        estudiante = registar_estudiante(lista_doble)
 
-                    if not lista_doble.insertar_antes(codigo, estudiante):
-                        raise ValueError("No se pudo insertar el estudiante.")
-                    print("Realizado con éxito.")
+                        if not lista_doble.insertar_antes(codigo, estudiante):
+                            raise ValueError("No se pudo insertar el estudiante.")
+                        print("Realizado con éxito.")
+                    else :
+                        print("La lista esta vacia")
 
                 case 20:
                     lista_doble.mostrar_fin_a_inicio()
