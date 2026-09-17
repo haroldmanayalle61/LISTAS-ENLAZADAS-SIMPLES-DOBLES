@@ -238,18 +238,21 @@ class ListaSimple:
         self.fin = None
 
     def __str__(self) -> str:
-
         if self.esta_vacia():
             return "La lista está vacía."
 
-        elementos = []
+        mensaje = ""
         nodo_actual = self.inicio
 
         while nodo_actual is not None:
-            elementos.append(str(nodo_actual.dato))
+            mensaje += str(nodo_actual.dato)
+
+            if nodo_actual.siguiente is not None:
+                mensaje += "\n"
+
             nodo_actual = nodo_actual.siguiente
 
-        return " -> ".join(elementos)
+        return mensaje
 
     def codigo_existe(self,codigo:str)-> bool:
         nodo_actual = self.inicio
